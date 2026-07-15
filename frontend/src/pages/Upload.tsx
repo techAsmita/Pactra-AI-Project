@@ -92,8 +92,11 @@ export const UploadPage: React.FC = () => {
     setProgress(0)
   }, [])
 
+  const hasSubmitted = useRef(false)
+
   const handleContinue = useCallback(() => {
-    if (!file) return
+    if (!file || hasSubmitted.current) return
+    hasSubmitted.current = true
     const agreement = createAgreement({
       fileName: file.name,
       fileSize: file.size,

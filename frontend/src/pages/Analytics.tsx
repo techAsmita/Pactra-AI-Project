@@ -154,8 +154,16 @@ export const AnalyticsPage: React.FC = () => {
                 <div className="flex flex-col gap-2">
                   {analytics.recentActivity.map(item => (
                     <div key={item.id}
-                      className="flex items-center justify-between py-2 border-b border-border-default last:border-0 cursor-pointer hover:bg-bg-card-hover -mx-2 px-2 rounded transition-colors duration-fast"
+                      className="flex items-center justify-between py-2 border-b border-border-default last:border-0 cursor-pointer hover:bg-bg-card-hover -mx-2 px-2 rounded transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                       onClick={() => navigate(`/contracts/${item.id}/decision`)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          navigate(`/contracts/${item.id}/decision`)
+                        }
+                      }}
                     >
                       <div className="min-w-0">
                         <p className="text-small font-body font-medium text-text-primary truncate">{item.name}</p>

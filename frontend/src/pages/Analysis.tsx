@@ -66,10 +66,18 @@ export const AnalysisPage: React.FC = () => {
   const resultRef = useRef<ReturnType<typeof generateSampleAnalysis> | null>(
     agreement?.analysis ?? null
   )
+  const streamContainerRef = useRef<HTMLDivElement>(null)
   if (agreement && !resultRef.current) {
     resultRef.current = generateSampleAnalysis()
   }
   const result = resultRef.current
+
+  // Smoothly auto-scroll the decision stream to the newest entry as it appends.
+  useEffect(() => {
+    const el = streamContainerRef.current
+    if (!el) return
+    el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+  }, [stream])
 
   const finish = useCallback(() => {
     if (!agreement || !result) return
@@ -83,7 +91,7 @@ export const AnalysisPage: React.FC = () => {
     if (!agreement || !result) return
     // If already completed, show the completed state immediately — including
     // a populated agent timeline and summary, never a "waiting" message.
-    if (agreement.status === 'decision_ready' && agreement.analysis) {
+    if (agreement.analysis) {
       setAgentPhases(Object.fromEntries(AGENTS.map(a => [a.id, 'completed'])))
       setConfidence(agreement.analysis.confidence)
       setStream(AGENTS.map(agent => ({
@@ -136,16 +144,19 @@ export const AnalysisPage: React.FC = () => {
   if (!agreement) {
     return (
       <PageContainer className="py-10">
-        <p className="text-body text-text-muted font-body">Agreement not found.</p>
+        <p className="text-body text-text-muted font-body mb-4">Agreement not found.</p>
+        <Button variant="secondary" size="md" onClick={() => navigate('/contracts')}>
+          Back to Contracts
+        </Button>
       </PageContainer>
     )
   }
 
   return (
     <PageContainer className="py-10 max-w-3xl">
-      <div className="flex items-center gap-3 mb-1">
-        <FileText size={16} className="text-text-muted" aria-hidden="true" />
-        <h1 className="font-heading text-h2 text-text-primary">{agreement.name}</h1>
+      <div className="flex items-center gap-3 mb-1 min-w-0">
+        <FileText size={16} className="text-text-muted shrink-0" aria-hidden="true" />
+        <h1 className="font-heading text-h2 text-text-primary truncate min-w-0">{agreement.name}</h1>
       </div>
       <p className="text-body text-text-muted font-body mb-4">
         {context.companyName
@@ -244,7 +255,7 @@ export const AnalysisPage: React.FC = () => {
             <p className="text-caption font-body text-text-muted font-semibold uppercase tracking-widest mb-2">
               Decision Stream
             </p>
-            <div className="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1 flex-1">
+            <div ref={streamContainerRef} className="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1 flex-1 scroll-smooth">
               {stream.length === 0 && (
                 <p className="text-small text-text-disabled font-body italic">Waiting for analysis to begin…</p>
               )}

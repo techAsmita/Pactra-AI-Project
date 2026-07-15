@@ -37,9 +37,20 @@ function useBreadcrumb() {
     negotiate: 'Negotiation',
   }
 
-  return segments.map((seg) => ({
-    label: labelMap[seg] || seg.charAt(0).toUpperCase() + seg.slice(1),
-  }))
+  // Only these segments correspond to a real, standalone route in the router.
+  // Dynamic agreement IDs (and the current/last segment) are shown as plain
+  // text — making them "clickable" would navigate to a URL with no page.
+  const NAVIGABLE_SEGMENTS = new Set(['workspace', 'contracts', 'negotiations', 'analytics', 'settings'])
+
+  let cumulative = ''
+  return segments.map((seg, i) => {
+    cumulative += `/${seg}`
+    const isLast = i === segments.length - 1
+    return {
+      label: labelMap[seg] || seg.charAt(0).toUpperCase() + seg.slice(1),
+      href: (!isLast && NAVIGABLE_SEGMENTS.has(seg)) ? cumulative : undefined,
+    }
+  })
 }
 
 // ─── AppShell ──────────────────────────────────────────────────────────────

@@ -29,8 +29,18 @@ export const TopBar: React.FC<TopBarProps> = ({ sidebarCollapsed, breadcrumb, on
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) setNotifOpen(false)
       if (profileRef.current && !profileRef.current.contains(e.target as Node)) setProfileOpen(false)
     }
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setNotifOpen(false)
+        setProfileOpen(false)
+      }
+    }
     document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
+    document.addEventListener('keydown', handleKey)
+    return () => {
+      document.removeEventListener('mousedown', handler)
+      document.removeEventListener('keydown', handleKey)
+    }
   }, [notifOpen, profileOpen])
 
   return (
@@ -48,12 +58,21 @@ export const TopBar: React.FC<TopBarProps> = ({ sidebarCollapsed, breadcrumb, on
         {breadcrumb?.map((crumb, i) => (
           <React.Fragment key={i}>
             {i > 0 && <span className="text-text-muted text-small font-body" aria-hidden="true">/</span>}
-            <span className={cn(
-              'text-small font-body truncate',
-              i === breadcrumb.length - 1 ? 'text-text-primary font-medium' : 'text-text-muted',
-            )}>
-              {crumb.label}
-            </span>
+            {crumb.href ? (
+              <button
+                onClick={() => navigate(crumb.href!)}
+                className="text-small font-body text-text-muted hover:text-text-primary truncate transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded"
+              >
+                {crumb.label}
+              </button>
+            ) : (
+              <span className={cn(
+                'text-small font-body truncate',
+                i === breadcrumb.length - 1 ? 'text-text-primary font-medium' : 'text-text-muted',
+              )}>
+                {crumb.label}
+              </span>
+            )}
           </React.Fragment>
         ))}
       </nav>
@@ -106,8 +125,14 @@ export const TopBar: React.FC<TopBarProps> = ({ sidebarCollapsed, breadcrumb, on
                 <div className="px-4 py-3 border-b border-border-default">
                   <p className="text-small font-body font-semibold text-text-primary">Notifications</p>
                 </div>
-                <div className="px-4 py-8 text-center">
-                  <p className="text-caption font-body text-text-muted">No notifications</p>
+                <div className="px-4 py-8 flex flex-col items-center text-center gap-3">
+                  <div className="w-11 h-11 rounded-full bg-brand/8 border border-brand/15 flex items-center justify-center" aria-hidden="true">
+                    <Bell size={18} className="text-brand" strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <p className="text-small font-body font-semibold text-text-primary">You're all caught up!</p>
+                    <p className="text-caption font-body text-text-muted mt-0.5">Nothing new right now.</p>
+                  </div>
                 </div>
               </motion.div>
             )}

@@ -10,6 +10,7 @@ import { Select } from '@/components/ui/Select'
 import { Textarea } from '@/components/ui/Textarea'
 import { Drawer } from '@/components/ui/Drawer'
 import { useFounderContext } from '@/hooks/useFounderContext'
+import { useAgreements } from '@/hooks/useAgreements'
 import { useToast } from '@/components/ui/Toast'
 import {
   INDUSTRY_OPTIONS, FUNDING_STAGE_OPTIONS, TEAM_SIZE_OPTIONS,
@@ -116,6 +117,7 @@ export const ContextReviewPage: React.FC = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { context } = useFounderContext()
+  const { setStatus, getAgreement } = useAgreements()
   const [loading, setLoading] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
 
@@ -132,6 +134,13 @@ export const ContextReviewPage: React.FC = () => {
 
   const handleContinue = () => {
     if (!agreementId) { navigate('/contracts/new'); return }
+    const agreement = getAgreement(agreementId)
+    // Only a real, still-pending agreement can transition to context_confirmed —
+    // never touch one that's already moved past this stage (e.g. reopened
+    // via back button after analysis already started).
+    if (agreement && agreement.status === 'uploaded') {
+      setStatus(agreementId, 'context_confirmed')
+    }
     setLoading(true)
     // Brief pause so the button feedback registers
     setTimeout(() => navigate(`/contracts/${agreementId}/analysis`), 300)

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { AlertTriangle, CheckCircle2, ArrowRight, ChevronRight } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, ArrowRight, ChevronRight, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { PageContainer } from '@/components/layout/PageContainer'
 import { Card } from '@/components/ui/Card'
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button'
 import { useAgreements } from '@/hooks/useAgreements'
 import { useToast } from '@/components/ui/Toast'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
+import { explainRecommendation } from '@/lib/explainDecision'
 import type { RiskLevel, DecisionOutcome, ClauseFlag } from '@/types'
 
 function usePrefersReducedMotion() {
@@ -44,8 +45,17 @@ const ClauseCard: React.FC<{ clause: ClauseFlag; index: number }> = ({ clause, i
       initial={reduced ? { opacity: 1 } : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.06 }}
-      className={cn('rounded-input border-l-4 border border-border-default bg-bg-surface p-4 cursor-pointer hover:bg-bg-card-hover transition-colors duration-fast', severityColor[clause.severity])}
+      className={cn('rounded-input border-l-4 border border-border-default bg-bg-surface p-4 cursor-pointer hover:bg-bg-card-hover transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand', severityColor[clause.severity])}
       onClick={() => setOpen(o => !o)}
+      role="button"
+      tabIndex={0}
+      aria-expanded={open}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          setOpen(o => !o)
+        }
+      }}
     >
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
@@ -104,8 +114,10 @@ export const DecisionCenterPage: React.FC = () => {
     Immediate: 'text-crimson', High: 'text-crimson', Medium: 'text-amber', Low: 'text-brand', None: 'text-success',
   }
 
-  // Derive top opportunities from recommended actions
-  const opportunities = analysis.recommendedActions.map(a => a)
+  // Top opportunities are sourced directly from recommended actions —
+  // no separate opportunities field exists on the analysis object.
+  const opportunities = analysis.recommendedActions
+  const explanationBullets = explainRecommendation(analysis)
 
   const riskBreakdownEntries = [
     { label: 'Financial Exposure', value: analysis.riskBreakdown.financialExposure },
@@ -127,7 +139,7 @@ export const DecisionCenterPage: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="font-heading text-h2 text-text-primary mb-1">{agreement.name}</h1>
+        <h1 className="font-heading text-h2 text-text-primary mb-1 break-words">{agreement.name}</h1>
         <p className="text-body text-text-muted font-body mb-8">{agreement.type}</p>
       </motion.div>
 
@@ -159,6 +171,35 @@ export const DecisionCenterPage: React.FC = () => {
         </div>
         <p className="text-body font-body text-text-secondary">{config.description}</p>
         <p className="text-small font-body text-text-muted mt-3 leading-relaxed">{analysis.summary}</p>
+      </motion.div>
+
+      {/* Why this recommendation? */}
+      <motion.div
+        initial={reduced ? { opacity: 1 } : { opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, delay: 0.12 }}
+        className="mb-6"
+      >
+        <Card variant="default">
+          <div className="flex items-center gap-2 mb-4">
+            <Sparkles size={14} className="text-brand" aria-hidden="true" />
+            <h2 className="font-heading text-h4 text-text-primary">Why this recommendation?</h2>
+          </div>
+          <div className="flex flex-col gap-3">
+            {explanationBullets.map((bullet, i) => (
+              <motion.div
+                key={i}
+                initial={reduced ? { opacity: 1 } : { opacity: 0, x: -6 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 0.16 + i * 0.06 }}
+                className="flex items-start gap-3"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-brand shrink-0 mt-2" aria-hidden="true" />
+                <p className="text-small font-body text-text-secondary leading-relaxed">{bullet}</p>
+              </motion.div>
+            ))}
+          </div>
+        </Card>
       </motion.div>
 
       <div className="grid tablet:grid-cols-2 gap-6 mb-6">
@@ -321,7 +362,10 @@ export const DecisionCenterPage: React.FC = () => {
             icon={<CheckCircle2 size={16} />} iconPosition="right"
             onClick={() => {
               if (id) archiveAgreement(id)
-              toast('Agreement archived', 'success')
+              toast('Agreement archived successfully.', 'success', 3000, {
+                label: 'View Archive',
+                onClick: () => navigate('/contracts?tab=archived'),
+              })
               navigate('/contracts')
             }}
           >

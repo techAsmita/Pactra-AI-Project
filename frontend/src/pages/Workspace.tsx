@@ -62,8 +62,16 @@ const AgreementRow: React.FC<{ agreement: Agreement; delay?: number }> = ({ agre
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay }}
-      className="flex items-center justify-between gap-4 p-4 rounded-card border border-border-default bg-bg-secondary hover:border-border-hover hover:bg-bg-card-hover transition-all duration-fast cursor-pointer"
+      className="flex items-center justify-between gap-4 p-4 rounded-card border border-border-default bg-bg-secondary hover:border-border-hover hover:bg-bg-card-hover transition-all duration-fast cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
       onClick={() => navigate(isAnalyzed ? `/contracts/${agreement.id}/decision` : `/contracts/${agreement.id}/analysis`)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          navigate(isAnalyzed ? `/contracts/${agreement.id}/decision` : `/contracts/${agreement.id}/analysis`)
+        }
+      }}
     >
       <div className="flex items-center gap-3 min-w-0">
         <div className="w-8 h-8 rounded-btn bg-brand/10 flex items-center justify-center shrink-0">
@@ -194,13 +202,21 @@ export const WorkspacePage: React.FC = () => {
                     {recentActivity.map(a => (
                       <div
                         key={`${a.id}_${a.updatedAt}`}
-                        className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-bg-card-hover transition-colors duration-fast"
+                        className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-bg-card-hover transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-inset"
                         onClick={() => navigate(isAnalyzed(a) ? `/contracts/${a.id}/decision` : `/contracts/${a.id}/analysis`)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            navigate(isAnalyzed(a) ? `/contracts/${a.id}/decision` : `/contracts/${a.id}/analysis`)
+                          }
+                        }}
                       >
                         <Sparkles size={13} className="text-brand shrink-0 mt-0.5" aria-hidden="true" />
                         <div className="min-w-0">
                           <p className="text-small font-body text-text-secondary leading-snug">{activityMessage(a)}</p>
-                          <p className="text-caption font-body text-text-disabled">{a.name} · {timeAgo(a.updatedAt)}</p>
+                          <p className="text-caption font-body text-text-disabled truncate">{a.name} · {timeAgo(a.updatedAt)}</p>
                         </div>
                       </div>
                     ))}
@@ -230,8 +246,16 @@ export const WorkspacePage: React.FC = () => {
                     {activeNegotiations.map(a => (
                       <div
                         key={a.id}
-                        className="flex items-center justify-between gap-3 p-3 rounded-card border border-border-default bg-bg-secondary hover:border-border-hover hover:bg-bg-card-hover transition-all duration-fast cursor-pointer"
+                        className="flex items-center justify-between gap-3 p-3 rounded-card border border-border-default bg-bg-secondary hover:border-border-hover hover:bg-bg-card-hover transition-all duration-fast cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                         onClick={() => navigate(`/contracts/${a.id}/negotiate`)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            navigate(`/contracts/${a.id}/negotiate`)
+                          }
+                        }}
                       >
                         <p className="text-small font-body font-medium text-text-primary truncate min-w-0">{a.name}</p>
                         {a.decision && <Badge type="decision" value={a.decision} size="sm" />}

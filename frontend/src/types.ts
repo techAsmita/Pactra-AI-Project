@@ -123,4 +123,5 @@ export interface Toast {
   type: ToastType
   message: string
   duration?: number
+  action?: { label: string; onClick: () => void }
 }

@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useMemo, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Plus, FileText, ArrowRight, ArrowUpDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -29,9 +29,17 @@ const ACTIVE_STATUSES: AgreementStatus[] = ['uploaded','parsing','context_confir
 export const ContractsPage: React.FC = () => {
   const navigate = useNavigate()
   const { agreements } = useAgreements()
-  const [tab, setTab] = useState<Tab>('active')
+  const [searchParams] = useSearchParams()
+  const [tab, setTab] = useState<Tab>(searchParams.get('tab') === 'archived' ? 'archived' : 'active')
   const [search, setSearch] = useState('')
   const [sortKey, setSortKey] = useState<SortKey>('date')
+
+  // Stay reactive to ?tab= changes (e.g. from a toast's "View Archive" action)
+  // even when this page is already mounted, not just on first load.
+  useEffect(() => {
+    const t = searchParams.get('tab')
+    if (t === 'archived' || t === 'active') setTab(t)
+  }, [searchParams])
 
   const filtered = useMemo(() => {
     let list = agreements.filter(a =>
@@ -151,8 +159,20 @@ export const ContractsPage: React.FC = () => {
                 ? `/contracts/${agreement.id}/decision`
                 : `/contracts/${agreement.id}/analysis`
               )}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  navigate(isAnalyzed(agreement)
+                    ? `/contracts/${agreement.id}/decision`
+                    : `/contracts/${agreement.id}/analysis`
+                  )
+                }
+              }}
               className={cn(
                 'grid tablet:grid-cols-[1fr_140px_120px_100px_44px] gap-4 items-center',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-inset',
                 'px-4 py-3.5 rounded-card border border-border-default bg-bg-secondary',
                 'hover:border-border-hover hover:bg-bg-card-hover',
                 'transition-all duration-fast cursor-pointer',

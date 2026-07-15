@@ -52,7 +52,21 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onDismiss }) => {
       onClick={() => onDismiss(toast.id)}
     >
       <span className={cn('shrink-0 mt-0.5', styles.icon)}>{iconMap[toast.type]}</span>
-      <p className="text-small text-text-primary font-body">{toast.message}</p>
+      <div className="flex flex-col gap-1.5 min-w-0">
+        <p className="text-small text-text-primary font-body">{toast.message}</p>
+        {toast.action && (
+          <button
+            onClick={(e) => { e.stopPropagation(); toast.action!.onClick(); onDismiss(toast.id) }}
+            className={cn(
+              'self-start text-caption font-body font-semibold uppercase tracking-wide',
+              'text-brand hover:text-brand-hover transition-colors duration-fast',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded',
+            )}
+          >
+            {toast.action.label}
+          </button>
+        )}
+      </div>
       <button
         onClick={(e) => { e.stopPropagation(); onDismiss(toast.id) }}
         aria-label="Dismiss notification"
@@ -67,7 +81,7 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onDismiss }) => {
 // ─── Toast context ─────────────────────────────────────────────────────────
 
 interface ToastContextValue {
-  toast: (message: string, type?: ToastVariant, duration?: number) => void
+  toast: (message: string, type?: ToastVariant, duration?: number, action?: { label: string; onClick: () => void }) => void
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null)
@@ -79,9 +93,14 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setToasts((prev) => prev.filter((t) => t.id !== id))
   }, [])
 
-  const addToast = useCallback((message: string, type: ToastVariant = 'info', duration = 3000) => {
+  const addToast = useCallback((
+    message: string,
+    type: ToastVariant = 'info',
+    duration = 3000,
+    action?: { label: string; onClick: () => void },
+  ) => {
     const id = `toast-${Date.now()}-${Math.random()}`
-    setToasts((prev) => [...prev, { id, type, message, duration }])
+    setToasts((prev) => [...prev, { id, type, message, duration, action }])
   }, [])
 
   return (

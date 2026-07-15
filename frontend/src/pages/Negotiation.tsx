@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Copy, CheckCircle2, ArrowRight, FileText } from 'lucide-react'
@@ -113,8 +113,16 @@ const NegotiationsHub: React.FC = () => {
             key={agreement.id}
             initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: i * 0.06 }}
-            className="flex items-center justify-between gap-4 p-5 rounded-card border border-border-default bg-bg-secondary hover:border-border-hover hover:bg-bg-card-hover transition-all duration-fast cursor-pointer"
+            className="flex items-center justify-between gap-4 p-5 rounded-card border border-border-default bg-bg-secondary hover:border-border-hover hover:bg-bg-card-hover transition-all duration-fast cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
             onClick={() => navigate(`/contracts/${agreement.id}/negotiate`)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                navigate(`/contracts/${agreement.id}/negotiate`)
+              }
+            }}
           >
             <div className="flex items-center gap-4 min-w-0">
               <div className="w-10 h-10 rounded-btn bg-amber/10 flex items-center justify-center shrink-0">
@@ -149,6 +157,20 @@ const NegotiationWorkspace: React.FC<{ agreementId: string }> = ({ agreementId }
   const agreement = getAgreement(agreementId)
   const analysis = agreement?.analysis
 
+  // Fix impossible/dead workflow state: 'negotiating' was defined and read
+  // everywhere (Workspace, Analytics, Contracts) but never actually written,
+  // so Active Negotiations always showed 0. Transition it here, the one
+  // place a founder actually starts working a negotiation — and only when
+  // negotiation is the correct next step (never overwrite an already
+  // archived/completed agreement).
+  useEffect(() => {
+    if (agreement && agreement.status === 'decision_ready' &&
+        (agreement.decision === 'NEGOTIATE' || agreement.decision === 'ESCALATE')) {
+      updateAgreement(agreement.id, { status: 'negotiating' })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [agreement?.id])
+
   const strategy = useMemo(() => {
     if (!analysis || !agreement) return null
     return buildStrategy(agreement, context.companyName)
@@ -163,17 +185,20 @@ const NegotiationWorkspace: React.FC<{ agreementId: string }> = ({ agreementId }
   }, [strategy?.email, emailContent])
 
   const handleCopyEmail = async () => {
-    if (!emailContent) return
+    if (!emailContent || copied) return
     await navigator.clipboard.writeText(emailContent)
     setCopied(true)
-    toast('Email copied to clipboard', 'success')
-    setTimeout(() => setCopied(false), 2000)
+    toast('Email copied to clipboard.', 'success', 3000)
+    setTimeout(() => setCopied(false), 3000)
   }
 
   const handleArchive = () => {
     if (!agreement) return
     updateAgreement(agreement.id, { status: 'archived' })
-    toast('Agreement archived', 'success')
+    toast('Agreement archived successfully.', 'success', 3000, {
+      label: 'View Archive',
+      onClick: () => navigate('/contracts?tab=archived'),
+    })
     setTimeout(() => navigate('/contracts'), 800)
   }
 
@@ -192,7 +217,7 @@ const NegotiationWorkspace: React.FC<{ agreementId: string }> = ({ agreementId }
     <PageContainer className="py-10 max-w-3xl">
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
         <h1 className="font-heading text-h2 text-text-primary mb-1">Negotiation Strategy</h1>
-        <p className="text-body text-text-muted font-body mb-8">
+        <p className="text-body text-text-muted font-body mb-8 break-words">
           {agreement.name} · {agreement.type}
         </p>
 
