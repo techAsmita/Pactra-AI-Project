@@ -10,6 +10,7 @@ import {
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
+import { Modal } from '@/components/ui/Modal'
 
 // ─── Utilities ─────────────────────────────────────────────────────────────
 
@@ -61,7 +62,7 @@ const LandingNav: React.FC = () => {
     { label: 'Features', href: '#features' },
     { label: 'How it Works', href: '#how-it-works' },
     { label: 'About', href: '#about' },
-    { label: 'GitHub', href: '#' },
+    { label: 'GitHub', href: 'https://github.com/techAsmita/Pactra-AI-Project', external: true },
   ]
 
   return (
@@ -83,6 +84,7 @@ const LandingNav: React.FC = () => {
           <nav className="hidden desktop:flex items-center gap-8" aria-label="Main navigation">
             {links.map(l => (
               <a key={l.label} href={l.href}
+                {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 className="text-small font-medium font-body text-text-muted hover:text-text-primary transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded">
                 {l.label}
               </a>
@@ -121,6 +123,7 @@ const LandingNav: React.FC = () => {
             <nav className="flex flex-col px-4 py-4 gap-1" aria-label="Mobile navigation">
               {links.map(l => (
                 <a key={l.label} href={l.href} onClick={() => setMobileOpen(false)}
+                  {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   className="text-body font-body text-text-secondary hover:text-text-primary px-3 py-2.5 rounded-btn hover:bg-bg-surface transition-all duration-fast">
                   {l.label}
                 </a>
@@ -1041,6 +1044,63 @@ const HowItWorksSection: React.FC = () => {
 
 // ─── Why Pactra ────────────────────────────────────────────────────────────
 
+// ─── Architecture ──────────────────────────────────────────────────────────
+
+const ArchitectureSection: React.FC = () => {
+  const stages = [
+    { icon: Building2, label: 'Founder Context',       desc: 'Industry, funding stage, and risk appetite set the lens for everything downstream.' },
+    { icon: FileText,  label: 'Contract Intelligence',  desc: 'Every clause is parsed, classified, and scored for risk and business impact.' },
+    { icon: Brain,     label: 'AI Agents',              desc: 'Five specialist agents evaluate legal, financial, growth, and negotiation angles.' },
+    { icon: Sparkles,  label: 'Decision Intelligence',   desc: 'Signals are synthesized into one explainable SIGN, WAIT, NEGOTIATE, or ESCALATE call.' },
+    { icon: Handshake, label: 'Negotiation Output',      desc: 'When needed, a ready-to-send strategy and email draft are generated automatically.' },
+  ]
+
+  return (
+    <section id="architecture" className="py-24 border-t border-border-default" aria-labelledby="architecture-heading">
+      <div className="max-w-content mx-auto px-4 tablet:px-10 desktop:px-20">
+        <FadeUp className="text-center max-w-2xl mx-auto mb-16">
+          <p className="text-small font-body text-brand font-medium uppercase tracking-widest mb-3">Architecture</p>
+          <h2 id="architecture-heading" className="font-heading font-bold text-h1 text-text-primary mb-4">
+            From business context to a signed decision.
+          </h2>
+          <p className="font-body text-body text-text-muted">
+            Every recommendation flows through the same pipeline — personalized at the first step,
+            explainable at the last.
+          </p>
+        </FadeUp>
+
+        <div className="flex flex-col tablet:flex-row items-stretch gap-3">
+          {stages.map((stage, i) => (
+            <React.Fragment key={stage.label}>
+              <FadeUp delay={i * 0.08} className="flex-1">
+                <div className={cn(
+                  'rounded-card border bg-bg-secondary p-5 h-full cursor-default text-center tablet:text-left',
+                  'transition-all duration-normal',
+                  'hover:-translate-y-1.5 hover:shadow-elv-3 hover:border-border-hover hover:bg-bg-card-hover',
+                  'border-border-default',
+                )}>
+                  <div className="w-10 h-10 rounded-btn bg-brand/10 flex items-center justify-center mb-3.5 mx-auto tablet:mx-0">
+                    <stage.icon size={18} className="text-brand" aria-hidden="true" />
+                  </div>
+                  <p className="font-heading font-semibold text-small text-text-primary mb-2 leading-tight">
+                    {stage.label}
+                  </p>
+                  <p className="text-caption font-body text-text-muted leading-relaxed">{stage.desc}</p>
+                </div>
+              </FadeUp>
+              {i < stages.length - 1 && (
+                <div className="hidden tablet:flex items-center justify-center shrink-0" aria-hidden="true">
+                  <ChevronRight size={18} className="text-text-disabled" />
+                </div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 const WhyPactraSection: React.FC = () => {
   const features = [
     {
@@ -1175,9 +1235,9 @@ const CtaSection: React.FC = () => (
                   Start Analysis
                 </Button>
               </Link>
-              <Link to="/workspace">
+              <a href="#architecture">
                 <Button variant="secondary" size="lg">View Architecture</Button>
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -1188,62 +1248,110 @@ const CtaSection: React.FC = () => (
 
 // ─── Footer ────────────────────────────────────────────────────────────────
 
-const LandingFooter: React.FC = () => (
-  <footer className="border-t border-border-default py-12" aria-label="Footer">
-    <div className="max-w-content mx-auto px-4 tablet:px-10 desktop:px-20">
-      <div className="flex flex-col tablet:flex-row items-start justify-between gap-8">
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-btn bg-brand flex items-center justify-center shrink-0">
-              <Zap size={14} className="text-white" aria-hidden="true" />
+const LandingFooter: React.FC = () => {
+  const [privacyOpen, setPrivacyOpen] = useState(false)
+
+  return (
+    <footer className="border-t border-border-default py-12" aria-label="Footer">
+      <div className="max-w-content mx-auto px-4 tablet:px-10 desktop:px-20">
+        <div className="flex flex-col tablet:flex-row items-start justify-between gap-8">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-7 h-7 rounded-btn bg-brand flex items-center justify-center shrink-0">
+                <Zap size={14} className="text-white" aria-hidden="true" />
+              </div>
+              <span className="font-heading font-bold text-body text-text-primary">Pactra</span>
             </div>
-            <span className="font-heading font-bold text-body text-text-primary">Pactra</span>
+            <p className="text-small font-body text-text-muted max-w-xs leading-relaxed">
+              Know every decision before you sign.
+            </p>
+            <p className="text-caption font-mono text-text-disabled">
+              Business Context + Contract Intelligence = Decision Intelligence
+            </p>
           </div>
-          <p className="text-small font-body text-text-muted max-w-xs leading-relaxed">
-            Know every decision before you sign.
-          </p>
-          <p className="text-caption font-mono text-text-disabled">
-            Business Context + Contract Intelligence = Decision Intelligence
-          </p>
+
+          <div className="flex flex-wrap gap-10">
+            <div className="flex flex-col gap-3">
+              <p className="text-caption font-body font-semibold text-text-muted uppercase tracking-wider">Product</p>
+              {[
+                { label: 'Features', href: '#features' },
+                { label: 'How it Works', href: '#how-it-works' },
+                { label: 'Architecture', href: '#architecture' },
+              ].map(({ label, href }) => (
+                <a key={label} href={href}
+                  className="text-small font-body text-text-disabled hover:text-text-primary transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded">
+                  {label}
+                </a>
+              ))}
+            </div>
+            <div className="flex flex-col gap-3">
+              <p className="text-caption font-body font-semibold text-text-muted uppercase tracking-wider">Links</p>
+              <a href="https://github.com/techAsmita/Pactra-AI-Project" target="_blank" rel="noopener noreferrer"
+                className="text-small font-body text-text-disabled hover:text-text-primary transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded">
+                GitHub
+              </a>
+              <button onClick={() => setPrivacyOpen(true)}
+                className="text-small font-body text-text-disabled hover:text-text-primary transition-colors duration-fast text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded">
+                Privacy
+              </button>
+              <a href="mailto:hello@pactra.ai"
+                className="text-small font-body text-text-disabled hover:text-text-primary transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded">
+                Contact
+              </a>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-10">
-          <div className="flex flex-col gap-3">
-            <p className="text-caption font-body font-semibold text-text-muted uppercase tracking-wider">Product</p>
-            {[
-              { label: 'Features', href: '#features' },
-              { label: 'How it Works', href: '#how-it-works' },
-              { label: 'Architecture', href: '#about' },
-            ].map(({ label, href }) => (
-              <a key={label} href={href}
-                className="text-small font-body text-text-disabled hover:text-text-primary transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded">
-                {label}
-              </a>
-            ))}
-          </div>
-          <div className="flex flex-col gap-3">
-            <p className="text-caption font-body font-semibold text-text-muted uppercase tracking-wider">Links</p>
-            {[
-              { label: 'GitHub', href: '#' },
-              { label: 'Privacy', href: '#about' },
-              { label: 'Contact', href: 'mailto:hello@pactra.ai' },
-            ].map(({ label, href }) => (
-              <a key={label} href={href}
-                className="text-small font-body text-text-disabled hover:text-text-primary transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded">
-                {label}
-              </a>
-            ))}
-          </div>
+        <div className="mt-10 pt-6 border-t border-border-default flex flex-col tablet:flex-row items-center justify-between gap-3">
+          <p className="text-caption font-body text-text-disabled">© 2026 Pactra. All rights reserved.</p>
+          <p className="text-caption font-body text-text-disabled">Built for founders who move fast and sign smart.</p>
         </div>
       </div>
 
-      <div className="mt-10 pt-6 border-t border-border-default flex flex-col tablet:flex-row items-center justify-between gap-3">
-        <p className="text-caption font-body text-text-disabled">© 2025 Pactra. All rights reserved.</p>
-        <p className="text-caption font-body text-text-disabled">Built for founders who move fast and sign smart.</p>
-      </div>
-    </div>
-  </footer>
-)
+      <Modal
+        open={privacyOpen}
+        onClose={() => setPrivacyOpen(false)}
+        title="Privacy Policy"
+        size="md"
+      >
+        <div className="flex flex-col gap-4 text-small font-body text-text-secondary leading-relaxed">
+          <p>
+            Pactra is a hackathon project built to demonstrate AI-powered contract decision intelligence.
+            This policy explains, in plain terms, how information is handled within this demo.
+          </p>
+          <div>
+            <p className="font-heading font-semibold text-text-primary mb-1">What we store</p>
+            <p>
+              Your founder profile and any agreements you upload are stored locally in your browser session
+              (<code className="text-caption bg-bg-surface px-1 py-0.5 rounded">sessionStorage</code>) and are
+              never sent to an external server or third party in this demo build.
+            </p>
+          </div>
+          <div>
+            <p className="font-heading font-semibold text-text-primary mb-1">Analysis data</p>
+            <p>
+              Contract analysis in this build is simulated for demonstration purposes. No document content is
+              transmitted to or processed by an external AI provider.
+            </p>
+          </div>
+          <div>
+            <p className="font-heading font-semibold text-text-primary mb-1">Your data, your control</p>
+            <p>
+              Clearing your browser session or closing this tab removes all locally stored data. Nothing
+              persists beyond your current session.
+            </p>
+          </div>
+          <p className="text-caption text-text-muted">
+            Questions? Reach out at{' '}
+            <a href="mailto:hello@pactra.ai" className="text-brand hover:text-brand-hover transition-colors duration-fast">
+              hello@pactra.ai
+            </a>.
+          </p>
+        </div>
+      </Modal>
+    </footer>
+  )
+}
 
 // ─── Page ──────────────────────────────────────────────────────────────────
 
@@ -1254,6 +1362,7 @@ export const LandingPage: React.FC = () => (
       <HeroSection />
       <ProblemSection />
       <HowItWorksSection />
+      <ArchitectureSection />
       <WhyPactraSection />
       <PrinciplesSection />
       <CtaSection />
