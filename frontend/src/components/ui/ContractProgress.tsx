@@ -1,46 +1,44 @@
 import React from 'react'
 import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { AgreementStatus } from '@/types'
+import type { Agreement } from '@/types'
 
 const STEPS = ['Uploaded', 'Analysis', 'Decision', 'Negotiation', 'Archived'] as const
 
-function stepIndexForStatus(status: AgreementStatus): number {
-  switch (status) {
-    case 'new':
-    case 'uploaded':
-    case 'parsing':
-    case 'context_confirmed':
-      return 0
-    case 'analyzing':
-      return 1
-    case 'decision_ready':
-      return 2
-    case 'negotiating':
-    case 'completed':
-      return 3
-    case 'archived':
-      return 4
-    default:
-      return 0
-  }
+/** Computes whether each lifecycle stage has actually been completed, based
+ *  on real agreement data — never assumed just because a later stage was
+ *  reached. A contract archived directly from Decision (without ever
+ *  entering negotiation) must show Negotiation as NOT completed. */
+function computeStepCompletion(agreement: Agreement): boolean[] {
+  const uploaded = true // an agreement always exists from the moment it's created
+  const analyzed = Boolean(agreement.analysis)
+  const decided = Boolean(agreement.analysis) // decision is produced in the same step as analysis
+  const negotiated = Boolean(agreement.negotiationStarted)
+  const archived = agreement.status === 'archived'
+  return [uploaded, analyzed, decided, negotiated, archived]
 }
 
 interface ContractProgressProps {
-  status: AgreementStatus
+  agreement: Agreement
   className?: string
 }
 
-/** Simple horizontal progress indicator: Uploaded → Analysis → Decision →
- *  Negotiation → Archived. Purely a status readout — not clickable. */
-export const ContractProgress: React.FC<ContractProgressProps> = ({ status, className }) => {
-  const current = stepIndexForStatus(status)
+/** Fully state-driven horizontal progress indicator. Each stage reflects
+ *  whether it actually happened for this specific agreement — not a linear
+ *  assumption based on current status. Purely a readout, not clickable. */
+export const ContractProgress: React.FC<ContractProgressProps> = ({ agreement, className }) => {
+  const completed = computeStepCompletion(agreement)
+  const isArchived = agreement.status === 'archived'
+  // The "active/next up" step only makes sense while the journey is still in
+  // progress — once archived, anything not completed is simply skipped, not
+  // "in progress", so nothing should show the pulsing active state.
+  const activeIndex = isArchived ? -1 : completed.findIndex((done) => !done)
 
   return (
     <div className={cn('flex items-center overflow-x-auto', className)} aria-label="Contract progress">
       {STEPS.map((label, i) => {
-        const done = i < current
-        const active = i === current
+        const done = completed[i]
+        const active = i === activeIndex
         return (
           <React.Fragment key={label}>
             <div className="flex items-center gap-1.5 shrink-0">
@@ -65,7 +63,7 @@ export const ContractProgress: React.FC<ContractProgressProps> = ({ status, clas
               </span>
             </div>
             {i < STEPS.length - 1 && (
-              <div className={cn('h-px flex-1 mx-2 min-w-[16px] tablet:min-w-[24px]', i < current ? 'bg-brand' : 'bg-border-default')} aria-hidden="true" />
+              <div className={cn('h-px flex-1 mx-2 min-w-[16px] tablet:min-w-[24px]', done && completed[i + 1] ? 'bg-brand' : 'bg-border-default')} aria-hidden="true" />
             )}
           </React.Fragment>
         )

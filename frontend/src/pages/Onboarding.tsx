@@ -559,6 +559,7 @@ export const OnboardingPage: React.FC = () => {
                           value={form.industry}
                           onChange={e => setField('industry', e.target.value)}
                           onBlur={() => handleBlur('industry')}
+                          validation={fieldValidation('industry')}
                           helperText={fieldError('industry')}
                         />
                       </>
@@ -583,6 +584,7 @@ export const OnboardingPage: React.FC = () => {
                           value={form.teamSize}
                           onChange={e => setField('teamSize', e.target.value)}
                           onBlur={() => handleBlur('teamSize')}
+                          validation={fieldValidation('teamSize')}
                           helperText={fieldError('teamSize')}
                         />
                         <Select
@@ -592,6 +594,7 @@ export const OnboardingPage: React.FC = () => {
                           value={form.revenueRange}
                           onChange={e => setField('revenueRange', e.target.value)}
                           onBlur={() => handleBlur('revenueRange')}
+                          validation={fieldValidation('revenueRange')}
                           helperText={fieldError('revenueRange')}
                         />
                       </>
@@ -615,6 +618,7 @@ export const OnboardingPage: React.FC = () => {
                           value={form.currentGoal}
                           onChange={e => setField('currentGoal', e.target.value)}
                           onBlur={() => handleBlur('currentGoal')}
+                          validation={fieldValidation('currentGoal')}
                           helperText={fieldError('currentGoal') ?? 'A specific sentence or two (20+ characters) — this helps Pactra weigh recommendations against what matters most to you right now.'}
                           maxLength={160}
                         />

@@ -10,6 +10,30 @@ import { useFounderContext } from '@/hooks/useFounderContext'
 import { useToast } from '@/components/ui/Toast'
 import { INDUSTRY_OPTIONS, FUNDING_STAGE_OPTIONS, RISK_APPETITE_OPTIONS } from '@/lib/founderOptions'
 
+interface FormErrors {
+  founderName?: string
+  founderEmail?: string
+  companyName?: string
+  industry?: string
+  fundingStage?: string
+  riskAppetite?: string
+}
+
+function validate(form: {
+  founderName: string; founderEmail: string; companyName: string
+  industry: string; fundingStage: string; riskAppetite: string
+}): FormErrors {
+  const errors: FormErrors = {}
+  if (!form.founderName.trim()) errors.founderName = 'Name is required.'
+  if (!form.founderEmail.trim()) errors.founderEmail = 'Email is required.'
+  else if (!/^\S+@\S+\.\S+$/.test(form.founderEmail)) errors.founderEmail = 'Enter a valid email address.'
+  if (!form.companyName.trim()) errors.companyName = 'Company name is required.'
+  if (!form.industry) errors.industry = 'Industry is required.'
+  if (!form.fundingStage) errors.fundingStage = 'Funding stage is required.'
+  if (!form.riskAppetite) errors.riskAppetite = 'Risk appetite is required.'
+  return errors
+}
+
 export const SettingsPage: React.FC = () => {
   const { context, updateContext } = useFounderContext()
   const { toast } = useToast()
@@ -23,6 +47,7 @@ export const SettingsPage: React.FC = () => {
     riskAppetite: context.riskAppetite,
     currentGoal: context.currentGoal,
   })
+  const [submitted, setSubmitted] = useState(false)
 
   const isDirty = useMemo(() => (
     form.founderName !== context.founderName ||
@@ -34,13 +59,19 @@ export const SettingsPage: React.FC = () => {
     form.currentGoal !== context.currentGoal
   ), [form, context])
 
-  const emailError = form.founderEmail && !/^\S+@\S+\.\S+$/.test(form.founderEmail)
-    ? 'Enter a valid email address.'
-    : undefined
+  // Recomputed on every render from current form state, so errors clear the
+  // instant a field becomes valid — no need to click Save again to see it.
+  const errors = validate(form)
+  const showErrors = submitted
+  const hasErrors = Object.keys(errors).length > 0
+
+  const fieldValidation = (key: keyof FormErrors) => (showErrors && errors[key] ? 'error' : 'default') as 'error' | 'default'
+  const fieldHelper = (key: keyof FormErrors) => (showErrors ? errors[key] : undefined)
 
   const handleSave = () => {
-    if (emailError) {
-      toast('Fix the errors before saving.', 'error')
+    setSubmitted(true)
+    if (hasErrors) {
+      toast('Fix the highlighted fields before saving.', 'error')
       return
     }
     // Single shared founder profile source — persisted to sessionStorage by
@@ -76,6 +107,8 @@ export const SettingsPage: React.FC = () => {
               placeholder="Your name"
               value={form.founderName}
               onChange={e => setForm(f => ({ ...f, founderName: e.target.value }))}
+              validation={fieldValidation('founderName')}
+              helperText={fieldHelper('founderName')}
             />
             <Input
               label="Email"
@@ -83,8 +116,8 @@ export const SettingsPage: React.FC = () => {
               placeholder="you@company.com"
               value={form.founderEmail}
               onChange={e => setForm(f => ({ ...f, founderEmail: e.target.value }))}
-              validation={emailError ? 'error' : 'default'}
-              helperText={emailError}
+              validation={fieldValidation('founderEmail')}
+              helperText={fieldHelper('founderEmail')}
             />
           </div>
         </Card>
@@ -104,24 +137,32 @@ export const SettingsPage: React.FC = () => {
               label="Company Name"
               value={form.companyName}
               onChange={e => setForm(f => ({ ...f, companyName: e.target.value }))}
+              validation={fieldValidation('companyName')}
+              helperText={fieldHelper('companyName')}
             />
             <Select
               label="Industry"
               options={INDUSTRY_OPTIONS}
               value={form.industry}
               onChange={e => setForm(f => ({ ...f, industry: e.target.value }))}
+              validation={fieldValidation('industry')}
+              helperText={fieldHelper('industry')}
             />
             <Select
               label="Funding Stage"
               options={FUNDING_STAGE_OPTIONS}
               value={form.fundingStage}
               onChange={e => setForm(f => ({ ...f, fundingStage: e.target.value as any }))}
+              validation={fieldValidation('fundingStage')}
+              helperText={fieldHelper('fundingStage')}
             />
             <Select
               label="Risk Appetite"
               options={RISK_APPETITE_OPTIONS}
               value={form.riskAppetite}
               onChange={e => setForm(f => ({ ...f, riskAppetite: e.target.value as any }))}
+              validation={fieldValidation('riskAppetite')}
+              helperText={fieldHelper('riskAppetite')}
             />
           </div>
         </Card>

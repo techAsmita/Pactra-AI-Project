@@ -4,14 +4,47 @@ import { motion } from 'framer-motion'
 import { Zap } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { useToast } from '@/components/ui/Toast'
+
+const SESSION_KEY = 'pactra_session'
+
+interface FormErrors {
+  email?: string
+  password?: string
+}
+
+function validate(email: string, password: string): FormErrors {
+  const errors: FormErrors = {}
+  if (!email.trim()) errors.email = 'Email is required.'
+  else if (!/^\S+@\S+\.\S+$/.test(email)) errors.email = 'Enter a valid email address.'
+  if (!password.trim()) errors.password = 'Password is required.'
+  return errors
+}
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate()
+  const { toast } = useToast()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+
+  const errors = validate(email, password)
+  const showErrors = submitted
+  const hasErrors = Object.keys(errors).length > 0
 
   const handleSignIn = () => {
-    // Demo mode: no backend auth yet — proceed straight to the workspace.
+    setSubmitted(true)
+    if (hasErrors) {
+      toast('Fix the highlighted fields to sign in.', 'error')
+      return
+    }
+    // Demo mode: no real backend auth yet, but we simulate a real session so
+    // the app behaves consistently (Sign Out below actually clears it).
+    try {
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email, signedInAt: new Date().toISOString() }))
+    } catch {
+      // sessionStorage unavailable — proceed anyway, this is demo-mode only
+    }
     navigate('/workspace')
   }
 
@@ -39,10 +72,14 @@ export const LoginPage: React.FC = () => {
             <Input
               label="Email" type="email" placeholder="you@company.com"
               value={email} onChange={e => setEmail(e.target.value)}
+              validation={showErrors && errors.email ? 'error' : 'default'}
+              helperText={showErrors ? errors.email : undefined}
             />
             <Input
               label="Password" type="password" placeholder="••••••••"
               value={password} onChange={e => setPassword(e.target.value)}
+              validation={showErrors && errors.password ? 'error' : 'default'}
+              helperText={showErrors ? errors.password : undefined}
             />
             <Button variant="primary" size="lg" className="w-full mt-2" onClick={handleSignIn}>
               Sign In

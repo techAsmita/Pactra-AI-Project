@@ -81,7 +81,7 @@ export const AgreementWorkspacePage: React.FC = () => {
 
           {agreement && (
             <div className="pb-3">
-              <ContractProgress status={agreement.status} />
+              <ContractProgress agreement={agreement} />
             </div>
           )}
 

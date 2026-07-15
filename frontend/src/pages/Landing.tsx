@@ -1316,8 +1316,8 @@ const LandingFooter: React.FC = () => {
       >
         <div className="flex flex-col gap-4 text-small font-body text-text-secondary leading-relaxed">
           <p>
-            Pactra is a hackathon project built to demonstrate AI-powered contract decision intelligence.
-            This policy explains, in plain terms, how information is handled within this demo.
+            Pactra is a demonstration product built to showcase AI-powered Founder Decision Intelligence.
+            This Privacy Policy explains how information is handled while using this demo application.
           </p>
           <div>
             <p className="font-heading font-semibold text-text-primary mb-1">What we store</p>
@@ -1342,9 +1342,10 @@ const LandingFooter: React.FC = () => {
             </p>
           </div>
           <p className="text-caption text-text-muted">
-            Questions? Reach out at{' '}
-            <a href="mailto:hello@pactra.ai" className="text-brand hover:text-brand-hover transition-colors duration-fast">
-              hello@pactra.ai
+            Questions? Visit the project's{' '}
+            <a href="https://github.com/techAsmita/Pactra-AI-Project" target="_blank" rel="noopener noreferrer"
+              className="text-brand hover:text-brand-hover transition-colors duration-fast">
+              GitHub repository
             </a>.
           </p>
         </div>

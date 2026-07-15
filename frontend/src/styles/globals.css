@@ -16,6 +16,7 @@
   }
 
   html {
+    background-color: #0B1020;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;

@@ -83,6 +83,12 @@ export interface Agreement {
   riskLevel?: RiskLevel
   confidence?: number
   analysis?: AnalysisResult
+  // True once the founder has actually opened the negotiation workspace for
+  // this agreement — distinct from current `status`, since status moves on
+  // to 'archived' and would otherwise erase the fact that negotiation
+  // happened (or didn't) along the way. Used to render an accurate lifecycle
+  // progress tracker instead of assuming every prior stage was completed.
+  negotiationStarted?: boolean
   updatedAt: string
   createdAt: string
 }

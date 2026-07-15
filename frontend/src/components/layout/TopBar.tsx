@@ -190,7 +190,11 @@ export const TopBar: React.FC<TopBarProps> = ({ sidebarCollapsed, breadcrumb, on
                 </div>
                 <div className="py-1 border-t border-border-default">
                   <button
-                    onClick={() => { setProfileOpen(false); navigate('/login') }}
+                    onClick={() => {
+                      setProfileOpen(false)
+                      try { sessionStorage.removeItem('pactra_session') } catch { /* ignore */ }
+                      navigate('/login')
+                    }}
                     className="w-full flex items-center gap-2.5 px-4 py-2 text-left text-small font-body text-crimson hover:bg-crimson/10 transition-colors duration-fast"
                   >
                     <LogOut size={14} aria-hidden="true" />

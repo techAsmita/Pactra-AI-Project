@@ -1,15 +1,32 @@
 import React, { useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 
+type TextareaValidation = 'default' | 'success' | 'error' | 'warning'
+
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string
   helperText?: string
   maxLength?: number
   hideLabel?: boolean
+  validation?: TextareaValidation
+}
+
+const validationStyles: Record<TextareaValidation, string> = {
+  default: 'border-border-default focus:border-border-focus',
+  success: 'border-success focus:border-success',
+  error: 'border-crimson focus:border-crimson',
+  warning: 'border-amber focus:border-amber',
+}
+
+const helperTextStyles: Record<TextareaValidation, string> = {
+  default: 'text-text-muted',
+  success: 'text-success',
+  error: 'text-crimson',
+  warning: 'text-amber',
 }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, helperText, maxLength, hideLabel = false, id, className, value, onChange, ...props }, ref) => {
+  ({ label, helperText, maxLength, hideLabel = false, validation = 'default', id, className, value, onChange, ...props }, ref) => {
     const internalRef = useRef<HTMLTextAreaElement>(null)
     const textareaRef = (ref as React.RefObject<HTMLTextAreaElement>) || internalRef
     const inputId = id || `textarea-${label.toLowerCase().replace(/\s+/g, '-')}`
@@ -37,19 +54,21 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           value={value}
           onChange={(e) => { onChange?.(e); adjustHeight() }}
           maxLength={maxLength}
+          aria-invalid={validation === 'error'}
           className={cn(
             'w-full rounded-input px-4 py-3 min-h-[96px] max-h-[240px]',
-            'bg-bg-surface border border-border-default text-text-primary font-body text-body',
+            'bg-bg-surface border text-text-primary font-body text-body',
             'placeholder:text-text-muted resize-none overflow-y-auto',
             'transition-all duration-fast',
-            'focus:outline-none focus:border-border-focus focus:ring-2 focus:ring-border-focus/20',
+            'focus:outline-none focus:ring-2 focus:ring-border-focus/20',
             'disabled:opacity-40 disabled:cursor-not-allowed',
+            validationStyles[validation],
             className,
           )}
           {...props}
         />
         <div className="flex justify-between">
-          {helperText && <p className="text-caption text-text-muted font-body">{helperText}</p>}
+          {helperText && <p className={cn('text-caption font-body', helperTextStyles[validation])}>{helperText}</p>}
           {maxLength && (
             <p className="text-caption text-text-muted font-body ml-auto">
               {String(value ?? '').length}/{maxLength}

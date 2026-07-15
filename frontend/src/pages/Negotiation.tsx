@@ -166,7 +166,7 @@ const NegotiationWorkspace: React.FC<{ agreementId: string }> = ({ agreementId }
   useEffect(() => {
     if (agreement && agreement.status === 'decision_ready' &&
         (agreement.decision === 'NEGOTIATE' || agreement.decision === 'ESCALATE')) {
-      updateAgreement(agreement.id, { status: 'negotiating' })
+      updateAgreement(agreement.id, { status: 'negotiating', negotiationStarted: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agreement?.id])
