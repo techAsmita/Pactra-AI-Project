@@ -1,113 +1,347 @@
+<div align="center">
+
 # Pactra
-### Know every decision before you sign.
 
-**Founder Decision Intelligence Platform**
+### AI-Powered Founder Decision Intelligence Platform
 
-> Business Context + Contract Intelligence = Decision Intelligence
+**Know every business decision before you sign.**
 
----
+> **Business Context + Contract Intelligence = Decision Intelligence**
 
-## What This Is
+![Pactra](docs/screenshots/hero.png)
 
-Pactra helps startup founders decide what to do with a contract — sign it, negotiate it, wait, or escalate — instead of just reading it. Every recommendation is personalized to the founder's actual business context (industry, funding stage, risk appetite) and stays consistent everywhere it's shown: Analysis, Decision, Negotiation, Contracts, and the Workspace dashboard all read from a single source of truth per contract.
+🌐 **[Live Demo](https://pactra-ai-project.vercel.app/)** &nbsp;&nbsp;•&nbsp;&nbsp;
+🎥 **Demo Video** *(Coming Soon)* &nbsp;&nbsp;•&nbsp;&nbsp;
+📄 **[Documentation](./docs)** &nbsp;&nbsp;•&nbsp;&nbsp;
+⭐ **[GitHub Repository](https://github.com/techAsmita/Pactra-AI-Project)**
 
-**Current state:** the frontend is a feature-complete, fully interactive product experience with a simulated AI analysis pipeline (mocked decision scenarios, not a live model call yet). The backend, database, and real AI integration described in the docs are planned but not yet implemented — see [Roadmap](#roadmap) below.
+<br>
 
----
+🧠 Multi-Agent Decision Intelligence &nbsp;&nbsp;|&nbsp;&nbsp;
+📄 PDF & DOCX Contract Analysis &nbsp;&nbsp;|&nbsp;&nbsp;
+🤝 Founder-Centric Negotiation Guidance
 
-## Feature Overview
-
-- **Founder Onboarding** — company profile, funding stage, risk appetite, validated goal statement
-- **Upload → Context Review → Analysis** — every contract confirms business context before analysis runs, with an inline edit drawer (no forced redirects)
-- **Multi-Agent Analysis Experience** — five simulated AI agents (Legal, Financial, Growth, Negotiation, Decision) work through a contract with live status, streaming commentary, and a persisted result — revisiting a completed analysis shows the full timeline and summary, never a stale "waiting" state
-- **Decision Center** — decision, confidence, risk breakdown, business impact, top risks, and top opportunities, all sourced from one analysis object per contract
-- **Negotiation Hub** — auto-populated for every NEGOTIATE/ESCALATE decision: priority clauses, suggested clause revisions, talking points, and an editable email draft
-- **Workspace Command Center** — needs-attention list, active negotiations, recent AI activity, and quick actions instead of a generic dashboard
-- **Analytics** — decision distribution, risk breakdown, clause frequency, and negotiation rate aggregated across every analyzed agreement
-- **Global Search** — contracts, clauses, decisions, risks, and company profile, all from one command palette (⌘K)
-- **Settings** — one shared founder profile (name, email, company, industry, funding stage, risk appetite) persisted across the whole app
-- **Contract progress indicator** — Uploaded → Analysis → Decision → Negotiation → Archived
+</div>
 
 ---
 
-## Stack
+# The Problem
 
-**Frontend (built):** React · Vite · TypeScript · Tailwind CSS · Framer Motion · Lucide
+Startup founders sign agreements every week—vendor contracts, employment agreements, NDAs, SaaS subscriptions, partnership deals—often without access to an in-house legal team.
 
-**Backend / AI (planned, not yet implemented):** FastAPI · Groq · MySQL · AsyncIO
+Existing AI tools summarize contracts or simplify legal language, but they rarely answer the questions founders actually care about:
 
-**Deploy (planned):** Vercel · Render
+- Should I sign this agreement?
+- Should I negotiate instead?
+- Which clauses are risky for my business?
+- What should I do next?
 
----
+Understanding a contract is helpful.
 
-## Docs
-
-| Document | Status |
-|---|---|
-| 01_PRODUCT_VISION.md | ✅ Frozen |
-| 02_INFORMATION_ARCHITECTURE.md | ✅ Frozen |
-| 03_DESIGN_SYSTEM.md | ✅ Frozen |
-| 04_COMPONENT_LIBRARY.md | ✅ Frozen |
-| 06_DECISION_FLOWS.md | ✅ Frozen |
-
-## Build Status
-
-| Milestone | Status |
-|---|---|
-| Product Blueprint & Design System | ✅ Complete |
-| Core Pages (Landing → Onboarding → Workspace → Upload → Analysis → Decision) | ✅ Complete |
-| Full Founder Journey (end-to-end navigation, state persistence) | ✅ Complete |
-| Founder Command Center, Negotiation Hub, Analytics, Global Search | ✅ Complete |
-| Product Consistency Pass (shared profile, single analysis object, dashboard rework) | ✅ Complete |
-| Visual & Interaction Polish (empty states, micro-interactions, data viz, responsiveness) | ✅ Complete |
-| Backend API + Real AI Integration | 🔜 Not started |
-| Auth / Persistent Accounts | 🔜 Not started (demo mode only — no real backend auth) |
+**Making the right business decision is what actually matters.**
 
 ---
 
-## Getting Started
+# The Solution
+
+Pactra transforms contract review into **decision intelligence**.
+
+Instead of only explaining legal text, Pactra combines your startup's business context with contract intelligence to recommend one clear action:
+
+- ✅ Sign
+- 🤝 Negotiate
+- ⏳ Wait
+- 🚨 Escalate
+
+Every recommendation is personalized using your company's:
+
+- Industry
+- Funding stage
+- Risk appetite
+- Current business goals
+
+When negotiation is recommended, Pactra automatically prepares a negotiation strategy and draft email to help founders move faster.
+
+---
+
+# Product
+
+| Workspace | Decision Center |
+|-----------|----------------|
+| ![](docs/screenshots/workspace.png) | ![](docs/screenshots/decision.png) |
+
+| Negotiation Hub | Analytics |
+|-----------------|-----------|
+| ![](docs/screenshots/negotiation.png) | ![](docs/screenshots/analytics.png) |
+
+---
+
+# Live Demo
+
+🌐 **Application**
+
+https://pactra-ai-project.vercel.app/
+
+🎥 **Demo Video**
+
+*(Add YouTube or Drive link here)*
+
+---
+
+# Key Features
+
+### 🧠 Founder Context
+
+A single founder profile powers every recommendation across the application.
+
+- Industry
+- Funding stage
+- Risk appetite
+- Company goals
+
+---
+
+### ⚖️ Contract Intelligence
+
+Analyze PDF and DOCX agreements with clause detection, severity scoring, and business impact assessment.
+
+---
+
+### 📈 Decision Engine
+
+Receive one clear recommendation:
+
+- Sign
+- Negotiate
+- Wait
+- Escalate
+
+along with confidence scores, business impact, risk breakdown, and an explainable "Why this recommendation?" summary.
+
+---
+
+### 🤝 Negotiation Hub
+
+For negotiation-worthy agreements Pactra automatically prepares:
+
+- Priority clauses
+- Suggested revisions
+- Talking points
+- Ready-to-send email draft
+
+---
+
+### 📊 Analytics Dashboard
+
+Track portfolio-wide insights including:
+
+- Decision distribution
+- Risk trends
+- Clause frequency
+- Negotiation rate
+- Overall agreement health
+
+---
+
+### 🔍 Global Search
+
+Search agreements, clauses, risks, decisions, and founder information instantly through a unified command palette.
+
+---
+
+# Why Pactra?
+
+| | Traditional Contract AI | Pactra |
+|---|---|---|
+| Primary Output | Contract Summary | Business Decision |
+| Personalization | Generic | Founder-specific |
+| Business Context | Limited | Fully integrated |
+| Next Action | User decides | Recommended automatically |
+| Negotiation Support | Usually absent | Built-in |
+
+**Traditional AI explains contracts.**
+
+**Pactra helps founders decide what to do next.**
+
+---
+
+# System Architecture
+
+```
+Founder Profile
+        │
+        ▼
+Business Context Engine
+        │
+        ▼
+Contract Parsing
+(PDF / DOCX)
+        │
+        ▼
+Risk & Clause Analysis
+        │
+        ▼
+Multi-Agent Intelligence
+ • Legal
+ • Financial
+ • Growth
+ • Negotiation
+        │
+        ▼
+Decision Engine
+SIGN • NEGOTIATE • WAIT • ESCALATE
+        │
+        ▼
+Negotiation Strategy
+        │
+        ▼
+Workspace Analytics
+```
+
+---
+
+# AI Architecture
+
+Pactra follows a hybrid decision pipeline.
+
+### Deterministic Layer
+
+Responsible for:
+
+- Decision classification
+- Confidence score
+- Risk scoring
+- Business impact
+
+This ensures predictable, reproducible recommendations.
+
+---
+
+### LLM Reasoning Layer
+
+Powered by **Groq (`llama-3.3-70b-versatile`)**
+
+Responsible for:
+
+- Plain-language explanation
+- Why this recommendation?
+- Key risks
+- Opportunities
+- Negotiation reasoning
+
+The model is accessed through a secure Vercel Serverless Function so API keys never reach the client.
+
+If the AI service is unavailable, Pactra automatically falls back to simulated reasoning so the experience never breaks.
+
+---
+
+# Technology Stack
+
+| Layer | Technology |
+|------|------------|
+| Frontend | React + TypeScript + Vite |
+| Styling | Tailwind CSS |
+| Animations | Framer Motion |
+| Icons | Lucide React |
+| Document Parsing | PDF.js + Mammoth |
+| AI | Groq (Llama 3.3 70B Versatile) |
+| State Management | React Context + sessionStorage |
+| Deployment | Vercel |
+
+---
+
+# Getting Started
 
 ```bash
-cd frontend
+git clone https://github.com/techAsmita/Pactra-AI-Project.git
+
+cd Pactra/frontend
+
 npm install
+
 npm run dev
 ```
 
-Then open the printed local URL (typically `http://localhost:5173`).
+Open:
+
+```
+http://localhost:5173
+```
+
+Build for production:
 
 ```bash
 npm run build
 ```
 
-builds the production bundle and type-checks the whole project.
+---
+
+# Project Structure
+
+```
+Pactra
+│
+├── docs
+│   ├── screenshots
+│   ├── Product Vision
+│   ├── Information Architecture
+│   ├── Design System
+│   ├── Component Library
+│   └── Decision Flows
+│
+├── frontend
+│
+├── backend (planned)
+│
+├── database (planned)
+│
+└── architecture
+```
 
 ---
 
-## Project Structure
+# Documentation
 
-```
-pactra/
-├── docs/                  # Frozen product/design/architecture docs
-├── frontend/
-│   └── src/
-│       ├── pages/         # Landing, Login, Onboarding, Workspace, Upload,
-│       │                  # ContextReview, Analysis, DecisionCenter,
-│       │                  # Negotiation, Contracts, Analytics, Settings
-│       ├── components/    # Shared UI primitives + layout components
-│       ├── hooks/         # useAgreements, useFounderContext, useAnalytics
-│       ├── lib/           # Shared logic: sampleAnalysis, founderOptions, utils
-│       ├── layouts/        # AppShell
-│       └── router/        # Route definitions
-├── backend/                # Planned — not yet implemented
-├── database/                # Planned — not yet implemented
-└── architecture/
-```
+- Product Vision
+- Information Architecture
+- Design System
+- Component Library
+- Decision Flows
 
 ---
 
-## Roadmap
+# Roadmap
 
-- Replace `sampleAnalysis.ts` mock scenarios with a real AI analysis pipeline
-- Build the FastAPI backend and persist agreements/founder profiles server-side instead of `sessionStorage`
-- Real authentication (Sign In / Sign Out currently just navigate — no session backing them)
-- Document upload → real text extraction instead of simulated parsing
+### Current Version
+
+- Complete founder workflow
+- Interactive multi-page product
+- AI-assisted reasoning
+- Negotiation workspace
+- Analytics dashboard
+- Live deployment
+
+### Future Work
+
+- FastAPI backend
+- Persistent database
+- Authentication
+- Multi-user workspaces
+- Advanced AI clause extraction
+- Enterprise integrations
+
+---
+
+# Built For
+
+Founders who need to make confident business decisions—before they sign the next agreement.
+
+---
+
+<div align="center">
+
+### ⭐ If you found Pactra interesting, consider giving the repository a star.
+
+Built with ❤️ for founders who move fast and sign smart.
+
+</div>
