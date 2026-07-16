@@ -6,11 +6,13 @@
 
 **Know every business decision before you sign.**
 
+Helping startup founders transform contract analysis into confident business decisions.
+
 > **Business Context + Contract Intelligence = Decision Intelligence**
 
 ![Pactra](docs/screenshots/hero.png)
 
-🌐 **[Live Demo](https://pactra-ai-project.vercel.app/)** &nbsp;&nbsp;•&nbsp;&nbsp;
+🌐 **[Experience Pactra](https://pactra-ai-project.vercel.app/)** &nbsp;&nbsp;•&nbsp;&nbsp;
 🎥 **Demo Video** *(Coming Soon)* &nbsp;&nbsp;•&nbsp;&nbsp;
 📄 **[Documentation](./docs)** &nbsp;&nbsp;•&nbsp;&nbsp;
 ⭐ **[GitHub Repository](https://github.com/techAsmita/Pactra-AI-Project)**
@@ -64,7 +66,7 @@ When negotiation is recommended, Pactra automatically prepares a negotiation str
 
 ---
 
-# Product
+# Product Experience
 
 | Workspace | Decision Center |
 |-----------|----------------|
@@ -73,6 +75,8 @@ When negotiation is recommended, Pactra automatically prepares a negotiation str
 | Negotiation Hub | Analytics |
 |-----------------|-----------|
 | ![](docs/screenshots/negotiation.png) | ![](docs/screenshots/analytics.png) |
+
+From founder onboarding to AI-powered negotiation, Pactra delivers a complete end-to-end decision workflow.
 
 ---
 
@@ -162,6 +166,28 @@ Search agreements, clauses, risks, decisions, and founder information instantly 
 **Traditional AI explains contracts.**
 
 **Pactra helps founders decide what to do next.**
+
+---
+
+# Competitive Positioning
+
+| Platform | Contract Summary | Founder Context | Decision Recommendation | Negotiation Guidance | Startup Focus |
+|-----------|:----------------:|:---------------:|:-----------------------:|:--------------------:|:-------------:|
+| ChatGPT / Claude | ✅ | ❌ | ❌ | ⚠️ Generic | ❌ |
+| Traditional Contract AI | ✅ | ⚠️ Limited | ❌ | ⚠️ Limited | ❌ |
+| **Pactra** | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+### Why Pactra stands out
+
+Most AI contract tools answer:
+
+> **"What does this contract say?"**
+
+Pactra answers:
+
+> **"Given my startup's stage, goals, and risk appetite, what should I do next?"**
+
+Instead of stopping at contract summaries, Pactra combines founder context with contract intelligence to recommend one clear business action—**Sign, Negotiate, Wait, or Escalate**—along with the reasoning and negotiation strategy behind that recommendation.
 
 ---
 
@@ -312,7 +338,7 @@ Pactra
 
 # Roadmap
 
-### Current Version
+### Today
 
 - Complete founder workflow
 - Interactive multi-page product
@@ -321,7 +347,7 @@ Pactra
 - Analytics dashboard
 - Live deployment
 
-### Future Work
+### What's Next
 
 - FastAPI backend
 - Persistent database
@@ -332,16 +358,26 @@ Pactra
 
 ---
 
+# Vision
+
+We believe contract intelligence shouldn't end at explaining legal language.
+
+Every founder should understand the **business impact** of an agreement before signing it.
+
+Pactra is building the decision layer between startups and every agreement they make.
+
+---
+
 # Built For
 
-Founders who need to make confident business decisions—before they sign the next agreement.
+Startup founders, early-stage teams, accelerators, and builders who need to make confident business decisions before signing their next agreement.
 
 ---
 
 <div align="center">
 
-### ⭐ If you found Pactra interesting, consider giving the repository a star.
+**Built with ❤️ for founders who move fast and sign smart.**
 
-Built with ❤️ for founders who move fast and sign smart.
+⭐ If you found Pactra interesting, consider giving the repository a star.
 
 </div>
