@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button'
 import { useAgreements } from '@/hooks/useAgreements'
 import { useFounderContext } from '@/hooks/useFounderContext'
 import { generateSampleAnalysis } from '@/lib/sampleAnalysis'
+import { requestAiAnalysis } from '@/lib/aiAnalysis'
 
 function usePrefersReducedMotion() { return useReducedMotion() ?? false }
 
@@ -105,6 +106,22 @@ export const AnalysisPage: React.FC = () => {
 
     setStatus(agreement.id, 'analyzing')
 
+    // Kick off the real AI call now, in parallel with the agent animation
+    // below. It resolves to null (never throws) if there's no usable
+    // extracted text, the endpoint isn't deployed, or the call fails —
+    // in every case the simulated result already in `result` is used as-is.
+    const aiPromise = requestAiAnalysis({
+      contractText: agreement.rawText ?? '',
+      companyName: context.companyName,
+      industry: context.industry,
+      fundingStage: context.fundingStage,
+      riskAppetite: context.riskAppetite,
+      currentGoal: context.currentGoal,
+      decision: result.decision,
+      riskLevel: result.riskLevel,
+      confidence: result.confidence,
+    })
+
     if (reduced) {
       finish()
       return
@@ -135,7 +152,22 @@ export const AnalysisPage: React.FC = () => {
       }, base + AGENT_SLOT - 100)
     })
 
-    add(finish, AGENTS.length * AGENT_SLOT + 400)
+    add(() => {
+      // Give the AI call a short additional grace window if it hasn't
+      // resolved yet by the time the animation would otherwise finish —
+      // bounded so the demo never feels like it's hanging.
+      const grace = new Promise<null>((resolve) => setTimeout(() => resolve(null), 3000))
+      Promise.race([aiPromise, grace]).then((ai) => {
+        if (ai) {
+          result.summary = ai.summary
+          result.aiExplanationBullets = ai.explanationBullets
+          if (ai.opportunities?.length) result.aiOpportunities = ai.opportunities
+          if (ai.keyRisks?.length) result.keyRisks = ai.keyRisks
+          result.aiGenerated = true
+        }
+        finish()
+      })
+    }, AGENTS.length * AGENT_SLOT + 400)
 
     return () => timers.forEach(clearTimeout)
     // eslint-disable-next-line react-hooks/exhaustive-deps

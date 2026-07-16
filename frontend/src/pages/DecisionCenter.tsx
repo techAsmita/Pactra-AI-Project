@@ -116,8 +116,10 @@ export const DecisionCenterPage: React.FC = () => {
 
   // Top opportunities are sourced directly from recommended actions —
   // no separate opportunities field exists on the analysis object.
-  const opportunities = analysis.recommendedActions
-  const explanationBullets = explainRecommendation(analysis)
+  const opportunities = analysis.aiOpportunities?.length ? analysis.aiOpportunities : analysis.recommendedActions
+  const explanationBullets = analysis.aiExplanationBullets?.length
+    ? analysis.aiExplanationBullets
+    : explainRecommendation(analysis)
 
   const riskBreakdownEntries = [
     { label: 'Financial Exposure', value: analysis.riskBreakdown.financialExposure },
@@ -181,9 +183,17 @@ export const DecisionCenterPage: React.FC = () => {
         className="mb-6"
       >
         <Card variant="default">
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles size={14} className="text-brand" aria-hidden="true" />
-            <h2 className="font-heading text-h4 text-text-primary">Why this recommendation?</h2>
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <div className="flex items-center gap-2">
+              <Sparkles size={14} className="text-brand" aria-hidden="true" />
+              <h2 className="font-heading text-h4 text-text-primary">Why this recommendation?</h2>
+            </div>
+            {analysis.aiGenerated && (
+              <span className="inline-flex items-center gap-1 rounded-badge border border-brand/30 bg-brand/10 px-2 py-0.5 text-caption font-semibold text-brand uppercase tracking-wide">
+                <Sparkles size={10} aria-hidden="true" />
+                AI Generated
+              </span>
+            )}
           </div>
           <div className="flex flex-col gap-3">
             {explanationBullets.map((bullet, i) => (

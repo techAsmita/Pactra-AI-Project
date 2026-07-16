@@ -70,6 +70,12 @@ export interface AnalysisResult {
   recommendedActions: string[]
   clauses: ClauseFlag[]
   summary: string
+  // Present only when the real AI call succeeded (real document text was
+  // extracted and the Groq API responded in time). Falls back to the
+  // deterministic explainRecommendation() function when absent.
+  aiExplanationBullets?: string[]
+  aiOpportunities?: string[]
+  aiGenerated?: boolean
 }
 
 export interface Agreement {
@@ -89,6 +95,10 @@ export interface Agreement {
   // happened (or didn't) along the way. Used to render an accurate lifecycle
   // progress tracker instead of assuming every prior stage was completed.
   negotiationStarted?: boolean
+  // Plain text extracted from the uploaded document (PDF/DOCX/TXT), used to
+  // power real AI-generated analysis text. Empty if extraction failed or the
+  // file type isn't supported — analysis falls back to simulated text then.
+  rawText?: string
   updatedAt: string
   createdAt: string
 }

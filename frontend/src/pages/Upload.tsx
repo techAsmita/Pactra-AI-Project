@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { PageContainer } from '@/components/layout/PageContainer'
 import { useAgreements } from '@/hooks/useAgreements'
 import { inferAgreementType } from '@/lib/sampleAnalysis'
+import { extractTextFromFile } from '@/lib/extractText'
 
 function usePrefersReducedMotion() {
   return useReducedMotion() ?? false
@@ -93,14 +94,21 @@ export const UploadPage: React.FC = () => {
   }, [])
 
   const hasSubmitted = useRef(false)
+  const [extracting, setExtracting] = useState(false)
 
-  const handleContinue = useCallback(() => {
+  const handleContinue = useCallback(async () => {
     if (!file || hasSubmitted.current) return
     hasSubmitted.current = true
+    setExtracting(true)
+    // Best-effort text extraction for real AI analysis — never blocks or
+    // breaks the flow. An empty result just means simulated analysis runs.
+    const rawText = await extractTextFromFile(file)
+    setExtracting(false)
     const agreement = createAgreement({
       fileName: file.name,
       fileSize: file.size,
       type: inferAgreementType(file.name),
+      rawText,
     })
     // Route through Founder Context Review before analysis
     navigate(`/contracts/new/context?id=${agreement.id}`)
@@ -243,8 +251,8 @@ export const UploadPage: React.FC = () => {
                   aria-label="Remove file and choose another"
                 />
               </div>
-              <Button variant="primary" size="lg" className="w-full mt-6" onClick={handleContinue}>
-                Begin Analysis
+              <Button variant="primary" size="lg" className="w-full mt-6" onClick={handleContinue} loading={extracting}>
+                {extracting ? 'Reading document…' : 'Begin Analysis'}
               </Button>
             </motion.div>
           )}

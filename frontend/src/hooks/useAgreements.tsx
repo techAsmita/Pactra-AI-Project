@@ -6,7 +6,7 @@ const STORAGE_KEY = 'pactra_agreements'
 interface AgreementsContextValue {
   agreements: Agreement[]
   getAgreement: (id: string) => Agreement | undefined
-  createAgreement: (input: { fileName: string; fileSize: number; type: Agreement['type'] }) => Agreement
+  createAgreement: (input: { fileName: string; fileSize: number; type: Agreement['type']; rawText?: string }) => Agreement
   updateAgreement: (id: string, patch: Partial<Agreement>) => void
   setStatus: (id: string, status: AgreementStatus) => void
   completeAnalysis: (id: string, analysis: AnalysisResult) => void
@@ -40,7 +40,7 @@ export const AgreementsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     return agreements.find(a => a.id === id)
   }, [agreements])
 
-  const createAgreement = useCallback((input: { fileName: string; fileSize: number; type: Agreement['type'] }): Agreement => {
+  const createAgreement = useCallback((input: { fileName: string; fileSize: number; type: Agreement['type']; rawText?: string }): Agreement => {
     const now = new Date().toISOString()
     const newAgreement: Agreement = {
       id: `agr_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
@@ -49,6 +49,7 @@ export const AgreementsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       status: 'uploaded',
       fileName: input.fileName,
       fileSize: input.fileSize,
+      rawText: input.rawText,
       createdAt: now,
       updatedAt: now,
     }
