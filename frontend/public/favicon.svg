@@ -1,0 +1,18 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg1" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4F46E5"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg1)"/>
+  <!-- document -->
+  <path d="M20 14h16l8 8v28a2 2 0 0 1-2 2H20a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2z" fill="#FFFFFF"/>
+  <path d="M36 14v8h8z" fill="#DDD6FE"/>
+  <!-- lines suggesting text -->
+  <rect x="22" y="30" width="14" height="2.4" rx="1.2" fill="#C7D2FE"/>
+  <rect x="22" y="35" width="10" height="2.4" rx="1.2" fill="#C7D2FE"/>
+  <!-- checkmark badge -->
+  <circle cx="38" cy="42" r="11" fill="#22C55E" stroke="#FFFFFF" stroke-width="2.5"/>
+  <path d="M33 42l3.4 3.6L44 38" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
