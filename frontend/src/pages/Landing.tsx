@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { motion, useInView, useReducedMotion, AnimatePresence } from 'framer-motion'
 import {
   Zap, Menu, X, ArrowRight, CheckCircle, ChevronRight,
@@ -748,7 +748,6 @@ const HeroPreview: React.FC = () => {
 
 const HeroSection: React.FC = () => {
   const reduced = usePrefersReducedMotion()
-  const navigate = useNavigate()
 
   return (
     <section className="relative min-h-screen flex items-center pt-20 pb-16 overflow-hidden" aria-label="Hero">
