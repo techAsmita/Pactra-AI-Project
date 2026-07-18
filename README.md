@@ -13,7 +13,7 @@ Helping startup founders transform contract analysis into confident business dec
 ![Pactra](docs/screenshots/hero.png)
 
 🌐 **[Experience Pactra](https://pactra-ai-project.vercel.app/)** &nbsp;&nbsp;•&nbsp;&nbsp;
-🎥 **Demo Video** *(Coming Soon)* &nbsp;&nbsp;•&nbsp;&nbsp;
+🎥 **[Watch Demo](https://drive.google.com/file/d/1A07YRP3R6mR4wUW4wMvIiyV7btL8cabc/view?usp=sharing)** &nbsp;&nbsp;•&nbsp;&nbsp;
 📄 **[Documentation](./docs)** &nbsp;&nbsp;•&nbsp;&nbsp;
 ⭐ **[GitHub Repository](https://github.com/techAsmita/Pactra-AI-Project)**
 
@@ -88,7 +88,7 @@ https://pactra-ai-project.vercel.app/
 
 🎥 **Demo Video**
 
-*(Add YouTube or Drive link here)*
+https://drive.google.com/file/d/1A07YRP3R6mR4wUW4wMvIiyV7btL8cabc/view?usp=sharing
 
 ---
 
