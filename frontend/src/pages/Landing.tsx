@@ -829,7 +829,18 @@ const HeroSection: React.FC = () => {
                   Start Analysis
                 </Button>
               </Link>
-              <Button variant="secondary" size="lg" onClick={() => navigate('/workspace')}>Watch Demo</Button>
+              <Button
+  variant="secondary"
+  size="lg"
+  onClick={() =>
+    window.open(
+      "https://drive.google.com/file/d/1A07YRP3R6mR4wUW4wMvIiyV7btL8cabc/view",
+      "_blank"
+    )
+  }
+>
+  Watch Demo
+</Button>
             </motion.div>
 
             <motion.div
